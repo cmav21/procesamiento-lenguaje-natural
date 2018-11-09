@@ -6,15 +6,22 @@ import java.util.Hashtable;
 public class program {
 
 
-    public static void addContenidoToHash(Hashtable hash,Hashtable repetidas,String[] array) {
+    public static void addContenidoToHash(Hashtable repetidas, Hashtable hash, String[] array)  {
 
         for(int i = 0; i < array.length; i++) {
             if(!hash.contains(array[i])) {
                 hash.put(array[i],array[i]);
             }
             else {
-                hash.remove(array[i]);
                 repetidas.put(array[i],array[i]);
+            }
+        }
+
+        Enumeration<String> enumeration = repetidas.elements();
+        while (enumeration.hasMoreElements()) {
+            String value = enumeration.nextElement();
+            if(hash.contains(value)) {
+                hash.remove(value);
             }
         }
     }
@@ -22,14 +29,14 @@ public class program {
 
     public static void WriteTextInfile(PrintWriter print_line, String fileName, Hashtable repetidas, Hashtable sinRepetir, boolean cerrar) throws IOException{
 
-        print_line.println("palabras Repetidas en " + fileName + ":");
+        print_line.println("palabras sin repetir en " + fileName + ":");
 
         Enumeration<String> enumeration = repetidas.elements();
         while (enumeration.hasMoreElements()) {
             print_line.println(enumeration.nextElement());
         }
 
-        print_line.println("palabras sin repetir en " + fileName + ":");
+        print_line.println("palabras repetidas en " + fileName + ":");
         Enumeration<String> words = sinRepetir.elements();
         while (words.hasMoreElements()) {
             print_line.println(words.nextElement());
@@ -51,7 +58,7 @@ public class program {
         String contenido = "",total="";
         String[] saltos,array;
 
-        Hashtable<String,String> contenedor = new Hashtable<String, String>();
+        Hashtable<String,String> sinRepetir = new Hashtable<String, String>();
         Hashtable<String,String> repetidas = new Hashtable<String, String>();
 
         FileWriter write = new FileWriter("/home/cesar/new.txt",false);
@@ -61,9 +68,10 @@ public class program {
             FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
             dialog.setMode(FileDialog.LOAD);
             dialog.setVisible(true);
-            String file = dialog.getFile();
+            String file = dialog.getDirectory();
+            String name = dialog.getFile();
 
-            BufferedReader in = new BufferedReader(new FileReader("/home/cesar/" + file));
+            BufferedReader in = new BufferedReader(new FileReader(file + name));
             String line = "", text="";
             while ((line = in.readLine()) != null) {
                 text += line + " ";
@@ -78,17 +86,17 @@ public class program {
 
             array = contenido.split(" ");
 
-            addContenidoToHash(contenedor, repetidas,array);
+            addContenidoToHash(sinRepetir, repetidas,array);
 
-            WriteTextInfile(print_line,file,repetidas,contenedor,false);
+            WriteTextInfile(print_line,name,repetidas,sinRepetir,false);
 
 
         }
 
         String[] prueba = total.split(" ");
-        addContenidoToHash(contenedor, repetidas,prueba);
+        addContenidoToHash(sinRepetir, repetidas,prueba);
 
-        WriteTextInfile(print_line,"en todos los archivos",repetidas,contenedor,true);
+        WriteTextInfile(print_line,"en todos los archivos",repetidas,sinRepetir,true);
 
     }
 
