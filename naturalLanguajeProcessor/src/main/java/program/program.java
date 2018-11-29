@@ -16,7 +16,7 @@ public class program {
         Hashtable<String,String> sinRepetir = new Hashtable<String, String>();
         Hashtable<String,String> repetidas = new Hashtable<String, String>();
 
-        FileWriter write = new FileWriter("/home/cesar/new.txt",false);
+        FileWriter write = new FileWriter("/home/cesar/0mvca.txt",false);
         PrintWriter print_line = new PrintWriter(write);
 
         for(int i = 0; i<3;i++) {
